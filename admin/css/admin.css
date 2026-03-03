@@ -1,0 +1,116 @@
+/**
+ * TCP Document Library - Admin Styles
+ */
+
+/* Admin Stats */
+.tcp-admin-stats {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.tcp-stat-box {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    min-width: 150px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.tcp-stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2271b1;
+    line-height: 1;
+}
+
+.tcp-stat-label {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+}
+
+/* Documents Filters */
+.tcp-documents-filters {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.tcp-documents-filters select {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* Sync Page */
+.tcp-sync-page .card {
+    max-width: 800px;
+    margin-bottom: 20px;
+}
+
+.tcp-sync-page h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.tcp-sync-page ol,
+.tcp-sync-page ul {
+    margin-left: 20px;
+    line-height: 1.8;
+}
+
+.tcp-sync-page ol li,
+.tcp-sync-page ul li {
+    margin-bottom: 8px;
+}
+
+/* Test Connection */
+.tcp-test-connection {
+    max-width: 800px;
+}
+
+#tcp-test-result {
+    margin-top: 10px;
+}
+
+#tcp-test-result .notice {
+    margin: 0;
+    padding: 10px;
+}
+
+/* Settings Page */
+.form-table th {
+    width: 200px;
+}
+
+.form-table input[type="text"].regular-text {
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-table .description {
+    color: #646970;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tcp-admin-stats {
+        flex-direction: column;
+    }
+
+    .tcp-stat-box {
+        width: 100%;
+    }
+
+    .tcp-documents-filters select {
+        width: 100%;
+        margin-right: 0;
+    }
+}
