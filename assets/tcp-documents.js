@@ -188,21 +188,29 @@
     return el;
   }
 
-  function renderApp(container, state) {
+  let _searchDebounce = null;
+
+  function renderApp(container, state, update) {
+    // Save focus state before clearing
+    const activeId = document.activeElement && document.activeElement.id;
+    const cursorPos = document.activeElement && document.activeElement.selectionStart;
+
     container.innerHTML = '';
 
-    const { documents, allDocuments, filters, currentPage, perPage } = state;
+    const { allDocuments, filters, currentPage, perPage } = state;
 
     // Search & Filters bar
     const searchInput = h('input', {
       type: 'text',
+      id: 'tcp-search-field',
       className: 'tcp-search-input',
       placeholder: 'Search documents...',
       value: filters.search || '',
       onInput: (e) => {
         state.filters.search = e.target.value;
         state.currentPage = 1;
-        update();
+        clearTimeout(_searchDebounce);
+        _searchDebounce = setTimeout(update, 300);
       },
     });
 
@@ -327,6 +335,17 @@
 
       container.appendChild(h('div', { className: 'tcp-pagination' }, prevBtn, pageNumbers, nextBtn));
     }
+
+    // Restore focus to search field if it was focused
+    if (activeId === 'tcp-search-field') {
+      const el = document.getElementById('tcp-search-field');
+      if (el) {
+        el.focus();
+        if (cursorPos != null) {
+          el.setSelectionRange(cursorPos, cursorPos);
+        }
+      }
+    }
   }
 
   // ── Initialization ──
@@ -367,7 +386,7 @@
     window.__tcpDocsUpdate = update;
 
     function update() {
-      renderApp(container, state);
+      renderApp(container, state, update);
     }
 
     // Try cache first, then fetch fresh in background
