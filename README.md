@@ -1,398 +1,256 @@
-# TCP Document Library - WordPress Plugin
+# TCP Document Library - Shopify Theme Files
 
-A WordPress plugin for The Concrete Protector company that provides mobile-optimized access to technical PDF documents (Technical Data Sheets and Safety Data Sheets) for decorative concrete coating products.
+A Shopify theme section that provides mobile-optimized access to technical PDF documents (TDS/SDS) with automatic Google Sheets sync. Documents are fetched live from your Google Sheet on every page load -- no database or backend needed.
 
 ## Features
 
-- **Google Sheets Integration** - Sync document metadata automatically from Google Sheets
-- **HubSpot Integration** - Store PDFs in HubSpot for CRM integration
-- **Search & Filter** - Full-text search and filtering by category, brand, and document type
+- **Google Sheets Auto-Sync** - Documents load live from Google Sheets on every page view
+- **No Backend Required** - Runs entirely in the browser, no server or database needed
+- **Search & Filter** - Full-text search and filtering by category, brand, product system, and document type
 - **Mobile-First Design** - Responsive interface optimized for field technicians
-- **WordPress Authentication** - Uses native WordPress user system
-- **Auto-Sync** - Automatically syncs documents when users log in
-- **REST API** - RESTful API for document queries
-- **React Frontend** - Modern, fast React-based document browser
-- **Shortcode Support** - Easy embedding with `[tcp_documents]`
+- **Shopify Theme Editor** - Configure API key and spreadsheet ID directly in the theme editor
+- **Session Caching** - Caches data for 5 minutes to reduce API calls while staying fresh
+- **Section & Snippet** - Use as a full section (theme editor) or a render snippet in any template
 
-## Installation
+## Installation (Step by Step)
 
-### 1. Upload Plugin
+### Step 1: Get a Google Sheets API Key
 
-1. Download or clone this repository
-2. Upload the `tcp-document-library` folder to `/wp-content/plugins/`
-3. Activate the plugin through the 'Plugins' menu in WordPress
+You need a free API key from Google so the document library can read your spreadsheet.
 
-### 2. Get Google Sheets API Key
-
-**Important:** You need a Google Sheets API key for the plugin to sync documents.
-
-#### Step-by-Step Instructions:
-
-1. **Go to Google Cloud Console**
-   - Visit [https://console.cloud.google.com/](https://console.cloud.google.com/)
-   - Sign in with your Google account
-
-2. **Create or Select a Project**
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) and sign in with your Google account
+2. **Create a project:**
    - Click the project dropdown at the top of the page
-   - Click "New Project"
-   - Enter a project name (e.g., "TCP Document Library")
-   - Click "Create"
-   - Wait for the project to be created, then select it
-
-3. **Enable Google Sheets API**
+   - Click **New Project**
+   - Name it something like "TCP Document Library"
+   - Click **Create**, then select the project
+3. **Enable the Google Sheets API:**
    - In the left sidebar, go to **APIs & Services > Library**
-   - Search for "Google Sheets API"
-   - Click on "Google Sheets API"
-   - Click the **"Enable"** button
-   - Wait for it to enable
+   - Search for **Google Sheets API**
+   - Click on it, then click **Enable**
+4. **Create an API key:**
+   - Go to **APIs & Services > Credentials**
+   - Click **+ Create Credentials > API Key**
+   - Copy the key that appears (starts with `AIza...`)
+5. **Restrict the key (recommended):**
+   - Click **Restrict Key** in the dialog
+   - Under "API restrictions", select **Restrict key**
+   - Check **Google Sheets API** only
+   - Under "Website restrictions", add your Shopify store domain (e.g. `yourstore.myshopify.com` and your custom domain)
+   - Click **Save**
 
-4. **Create API Credentials**
-   - In the left sidebar, go to **APIs & Services > Credentials**
-   - Click **"+ Create Credentials"** at the top
-   - Select **"API Key"**
-   - A dialog will appear with your new API key - **COPY THIS KEY** (you'll need it later)
+### Step 2: Make Your Google Sheet Public
 
-5. **Restrict the API Key (Recommended for Security)**
-   - Click **"Restrict Key"** in the dialog (or click the pencil icon next to your key)
-   - Under **"API restrictions"**, select **"Restrict key"**
-   - In the dropdown, check **"Google Sheets API"**
-   - Click **"Save"**
+1. Open your Google Sheet with the document data
+2. Click the **Share** button (top right)
+3. Click **Change to anyone with the link**
+4. Set permission to **Viewer**
+5. Click **Done**
+6. Copy the **Spreadsheet ID** from the URL:
+   `https://docs.google.com/spreadsheets/d/`**`THIS_PART_IS_THE_ID`**`/edit`
 
-6. **Make Your Google Sheet Accessible**
-   - Open your Google Sheet with document data
-   - Click the **"Share"** button
-   - Click **"Change to anyone with the link"**
-   - Set permission to **"Viewer"**
-   - Click **"Done"**
+### Step 3: Add Files to Your Shopify Theme
 
-### 3. Configure Plugin Settings
+#### Option A: Via Shopify Admin (easiest)
 
-**All settings are configured in the WordPress admin - nothing is hardcoded!**
+1. In your Shopify admin, go to **Online Store > Themes**
+2. On your active theme, click the **...** menu and select **Edit code**
+3. **Add the CSS file:**
+   - In the left sidebar under **Assets**, click **Add a new asset**
+   - Choose **Create a blank file**, name it `tcp-documents` with extension `.css`
+   - Paste the contents of [assets/tcp-documents.css](assets/tcp-documents.css)
+   - Click **Save**
+4. **Add the JS file:**
+   - Under **Assets**, click **Add a new asset**
+   - Choose **Create a blank file**, name it `tcp-documents` with extension `.js`
+   - Paste the contents of [assets/tcp-documents.js](assets/tcp-documents.js)
+   - Click **Save**
+5. **Add the section:**
+   - In the left sidebar under **Sections**, click **Add a new section**
+   - Name it `tcp-document-library`
+   - Replace all the default content with the contents of [sections/tcp-document-library.liquid](sections/tcp-document-library.liquid)
+   - Click **Save**
+6. **Add the snippet (optional):**
+   - Under **Snippets**, click **Add a new snippet**
+   - Name it `tcp-document-library`
+   - Paste the contents of [snippets/tcp-document-library.liquid](snippets/tcp-document-library.liquid)
+   - Click **Save**
 
-1. In WordPress admin, go to **TCP Documents > Settings**
+#### Option B: Via Shopify CLI
 
-2. **Enter Google Sheets API Key:**
-   - Paste the API key you copied from Google Cloud Console
-   - This is required for the plugin to access your spreadsheet
+If you use the Shopify CLI, copy the files directly:
 
-3. **Enter Spreadsheet ID:**
-   - Open your Google Sheet
-   - Copy the ID from the URL: `https://docs.google.com/spreadsheets/d/`**`[SPREADSHEET_ID]`**`/edit`
-   - Paste it into the Spreadsheet ID field
-   - Default example: `1kGVVChB5uqT1RR4cCbYxb97Bu2PyI6tgU8F6BfzCFo0`
-
-4. **Enter Sheet Name:**
-   - Enter the name of the tab in your spreadsheet (default: `File Data`)
-   - This must match exactly (case-sensitive)
-
-5. **Configure General Settings:**
-   - ✓ **Auto-sync on Login** - Automatically sync when users log in (recommended)
-   - ✓ **Require Login** - Only logged-in users can view documents (recommended)
-
-6. Click **Save Settings**
-
-### 4. Test Connection
-
-1. On the settings page, click **Test Connection**
-2. Verify that the connection is successful
-
-### 5. Sync Documents
-
-1. Go to **TCP Documents > Sync Now**
-2. Click **Sync Now** to import documents from Google Sheets
-3. Wait for sync to complete
-
-## Usage
-
-### Display Documents on a Page
-
-Use the shortcode to display the document library on any page or post:
-
-```
-[tcp_documents]
+```bash
+# From this repo's root, copy into your theme directory:
+cp assets/tcp-documents.css   /path/to/your-theme/assets/
+cp assets/tcp-documents.js    /path/to/your-theme/assets/
+cp sections/tcp-document-library.liquid /path/to/your-theme/sections/
+cp snippets/tcp-document-library.liquid /path/to/your-theme/snippets/
 ```
 
-### With Filters
+Then deploy with `shopify theme push`.
 
-Pre-filter documents using shortcode attributes:
+### Step 4: Add the Document Library to a Page
 
+#### Using the Theme Editor (Recommended)
+
+1. Go to **Online Store > Themes > Customize**
+2. In the page selector dropdown (top center), choose the page where you want the library (e.g. a "Documents" page)
+3. Click **Add section**
+4. Find and select **Document Library**
+5. In the section settings panel on the left:
+   - Paste your **Google Sheets API Key**
+   - Paste your **Spreadsheet ID**
+   - Adjust documents per page if desired (default: 30)
+   - Optionally set default filters
+6. Click **Save**
+
+That's it! The document library will now appear on that page and auto-sync from your Google Sheet.
+
+#### Using a Liquid Snippet (Advanced)
+
+If you want to embed the library in a custom template, use the snippet:
+
+```liquid
+{% render 'tcp-document-library',
+  api_key: 'AIzaSy...',
+  spreadsheet_id: '1kGVVChB5uqT...'
+%}
 ```
-[tcp_documents category="Epoxies"]
-[tcp_documents brand="The Concrete Protector"]
-[tcp_documents category="Polyaspartics" document_type="TDS"]
+
+With optional pre-filters:
+
+```liquid
+{% render 'tcp-document-library',
+  api_key: 'AIzaSy...',
+  spreadsheet_id: '1kGVVChB5uqT...',
+  category: 'Epoxies',
+  brand: 'The Concrete Protector',
+  document_type: 'TDS',
+  per_page: 50
+%}
 ```
 
-### Available Attributes
+### Step 5: Create a Page to Link To (if needed)
 
-- `category` - Filter by category (Epoxies, Polyaspartics, Urethanes, Sealers, Dyes/Stains, Cementitious)
-- `brand` - Filter by brand (The Concrete Protector, Match Patch Pro, Scientific Concrete Polishing, Sani-Tred)
-- `document_type` - Filter by type (TDS or SDS)
-- `search` - Pre-populate search term
+If you don't already have a page for the document library:
+
+1. In Shopify admin, go to **Online Store > Pages**
+2. Click **Add page**
+3. Title it "Document Library" (or whatever you prefer)
+4. Leave the content blank -- the section handles everything
+5. Under **Template**, select the template where you added the section
+6. Click **Save**
+7. Add the page to your navigation: **Online Store > Navigation > Main menu > Add menu item**
 
 ## Google Sheets Format
 
-Your Google Sheet should have a tab named "File Data" (or "Sheet1") with these columns:
+All sheets/tabs in the spreadsheet are read automatically. Each sheet should have a header row with these columns:
 
 | Column Name | Required | Description |
-|-------------|----------|-------------|
+|---|---|---|
 | Title | Yes | Document title |
 | Description | No | Document description |
-| Category (Urethanes, Epoxies, Sealers etc) | No | Product category |
+| Category | No | Product category (e.g. Epoxies, Polyaspartics) |
 | Brand | No | Product brand |
-| Document Type (SDS, TDS, Marketing) | No | Document type |
-| HubSpot File URL | **Yes** | Direct URL to PDF file (unique identifier) |
+| Product System | No | Product system name |
+| Document Type | No | TDS, SDS, Marketing, etc. |
+| HubSpot File URL | **Yes** | Direct URL to the PDF file |
 | HubSpot File ID | No | HubSpot file identifier |
-| Google Drive File URL | No | (Optional - not currently used) |
 | File Name | No | Original filename |
-| Last Updated | No | (Optional - not currently used) |
 
-**Important:**
-- The HubSpot File URL is **required** and used as the unique identifier for each document
-- Column headers can include additional text in parentheses (e.g., "Category (Urethanes, Epoxies, Sealers etc)")
-- The plugin will match columns even if they have extra descriptive text
+**Notes:**
+- Column headers are matched flexibly -- "Category (Urethanes, Epoxies, Sealers etc)" matches as "Category"
+- Rows without a HubSpot File URL are skipped
+- You can have multiple tabs/sheets -- they are all combined into one library
 
-## Admin Features
+## Section Settings (Theme Editor)
 
-### View All Documents
+| Setting | Description |
+|---|---|
+| Google Sheets API Key | Your API key from Google Cloud Console |
+| Spreadsheet ID | The ID from your Google Sheet URL |
+| Documents per page | 10-100, default 30 |
+| Default category filter | Pre-filter by category |
+| Default brand filter | Pre-filter by brand |
+| Default document type filter | Pre-filter by type |
 
-Go to **TCP Documents > All Documents** to see all synced documents with:
-- Total document count
-- Category and brand statistics
-- Filterable document list
-- Quick PDF access
+## How It Works
 
-### Manual Sync
+1. When a customer visits the page, the JavaScript fetches your spreadsheet data via the Google Sheets API
+2. All sheets/tabs are read and combined into one document list
+3. Data is cached in the browser for 5 minutes so repeated visits are fast
+4. Fresh data is always fetched in the background to keep things up to date
+5. The frontend renders a searchable, filterable, paginated card grid
 
-Go to **TCP Documents > Sync Now** to manually trigger a sync from Google Sheets.
-
-### Auto-Sync
-
-By default, documents are automatically synced in the background when users log in. You can disable this in **Settings**.
-
-## API Endpoints
-
-The plugin provides REST API endpoints at `/wp-json/tcp-docs/v1/`:
-
-### Public Endpoints (require authentication)
-
-- `GET /documents` - List documents with optional filters
-  - Query params: `search`, `category`, `brand`, `document_type`, `limit`, `offset`
-- `GET /documents/{id}` - Get single document
-- `GET /filters` - Get available filter options
-- `GET /auth/user` - Get current user info
-
-### Admin Endpoints (require admin privileges)
-
-- `POST /admin/sync` - Trigger Google Sheets sync
-- `POST /admin/test-connection` - Test Google Sheets connection
-
-## Requirements
-
-### WordPress Environment
-- WordPress 6.0 or higher
-- PHP 7.4 or higher
-- Active WordPress user accounts (for authentication)
-
-### External Services (Required)
-- **Google Cloud Account** - Free account required to obtain API key
-- **Google Sheets API Key** - Obtained from Google Cloud Console (see installation instructions above)
-- **Google Sheet** - Public spreadsheet with document metadata
-- **HubSpot Account** - For hosting PDF files (URLs stored in Google Sheet)
-
-### Important Notes
-- ✅ **No coding required** - All configuration is done through WordPress admin
-- ✅ **No hardcoded values** - API key and spreadsheet ID are entered in settings
-- ✅ **Free API access** - Google Sheets API has a generous free tier
-- ✅ **One-time setup** - Configure once, sync automatically
+**No manual sync, no cron jobs, no database** -- just update your Google Sheet and the changes appear automatically.
 
 ## File Structure
 
 ```
-tcp-document-library/
-├── tcp-document-library.php    # Main plugin file
-├── includes/
-│   ├── class-database.php      # Database operations
-│   ├── class-google-sheets.php # Google Sheets sync
-│   ├── class-api.php           # REST API endpoints
-│   └── class-shortcode.php     # Shortcode handler
-├── admin/
-│   ├── class-admin.php         # Admin interface
-│   ├── class-settings.php      # Settings management
-│   ├── css/
-│   │   └── admin.css          # Admin styles
-│   ├── js/
-│   │   └── admin.js           # Admin scripts
-│   └── views/
-│       ├── settings-page.php  # Settings template
-│       ├── sync-page.php      # Sync template
-│       └── documents-list.php # Documents list template
-├── public/
-│   ├── class-public.php       # Frontend handler
-│   ├── css/
-│   │   └── style.css          # Frontend styles
-│   └── js/
-│       └── app.js             # React frontend app
-└── README.md
+assets/
+  tcp-documents.css           # Frontend styles
+  tcp-documents.js            # Frontend app (fetches from Google Sheets)
+sections/
+  tcp-document-library.liquid # Theme editor section with schema settings
+snippets/
+  tcp-document-library.liquid # Embeddable snippet for any template
 ```
-
-## Database Schema
-
-The plugin creates one custom table: `wp_tcp_documents`
-
-### Columns
-
-- `id` - Primary key
-- `title` - Document title
-- `description` - Document description
-- `category` - Product category
-- `brand` - Product brand
-- `document_type` - TDS or SDS
-- `file_name` - Original filename
-- `file_path` - Legacy field (unused)
-- `hubspot_file_url` - PDF URL (unique identifier)
-- `hubspot_file_id` - HubSpot file ID
-- `uploaded_by` - WordPress user ID
-- `created_at` - Created timestamp
-- `updated_at` - Last updated timestamp
-
-## Security
-
-- All API endpoints require user authentication
-- Admin endpoints require `manage_options` capability
-- Nonce verification on AJAX requests
-- SQL injection protection via prepared statements
-- XSS protection via WordPress escaping functions
 
 ## Troubleshooting
 
-### Google Sheets API Issues
+### Documents not loading
 
-**Problem: "Failed to fetch data from Google Sheets"**
+1. Open browser console (F12 > Console tab) and look for error messages
+2. Verify your API key is correct (starts with `AIza...`)
+3. Ensure the Google Sheets API is enabled in your Google Cloud project
+4. Check that the spreadsheet is shared publicly (Anyone with the link > Viewer)
+5. Verify the Spreadsheet ID matches what's in your Google Sheet URL
+6. If you restricted your API key to specific domains, make sure your Shopify store domain is listed
 
-**Solutions:**
-1. **Verify API Key is Correct**
-   - Go to TCP Documents > Settings
-   - Make sure the API key is entered correctly (no extra spaces)
-   - API keys start with `AIza...`
+### "Failed to load documents" error
 
-2. **Check API is Enabled**
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Navigate to APIs & Services > Library
-   - Search for "Google Sheets API"
-   - Make sure it shows "API enabled"
+- Most commonly caused by an incorrect API key or private spreadsheet
+- Check the browser console for the specific HTTP status code:
+  - **403**: API key is invalid, restricted, or Sheets API not enabled
+  - **404**: Spreadsheet ID is wrong or sheet doesn't exist
+  - **429**: Too many requests -- wait a minute and reload
 
-3. **Verify API Key Restrictions**
-   - Go to APIs & Services > Credentials
-   - Click on your API key
-   - Under "API restrictions", make sure "Google Sheets API" is selected
-   - If you have "HTTP referrers" restrictions, your WordPress site domain must be listed
+### API quota errors
 
-4. **Test the API Key**
-   - Go to TCP Documents > Settings
-   - Click "Test Connection" button
-   - This will verify your API key and spreadsheet access
+- Google Sheets API free tier allows 300 requests/minute
+- The 5-minute session cache prevents excessive requests
+- If you hit limits, wait a few minutes and reload
 
-**Problem: "API key quota exceeded"**
+### PDFs not opening
 
-**Solutions:**
-- Google Sheets API has a free tier limit of 300 requests per minute
-- The plugin caches data locally, so this should rarely happen
-- If it does, wait a few minutes and try again
-- Consider upgrading to a paid Google Cloud plan for higher limits
+- Verify the HubSpot File URLs in your spreadsheet open correctly when pasted directly in a browser
+- Check for extra spaces or line breaks in the URL cells
+- Ensure PDFs are publicly accessible (not behind authentication)
 
-### Spreadsheet Access Issues
+### Section not appearing in theme editor
 
-**Problem: "No data received from Google Sheets"**
+- Make sure the section file is named exactly `tcp-document-library.liquid`
+- Make sure it's in the `sections/` folder (not `snippets/`)
+- Try refreshing the theme editor
 
-**Solutions:**
-1. **Verify Spreadsheet ID**
-   - Open your Google Sheet in a browser
-   - Copy the ID from the URL: `https://docs.google.com/spreadsheets/d/`**`[SPREADSHEET_ID]`**`/edit`
-   - Go to TCP Documents > Settings
-   - Make sure this ID is entered correctly
+## Requirements
 
-2. **Check Sheet is Publicly Accessible**
-   - Open your Google Sheet
-   - Click "Share" button
-   - Make sure it's set to "Anyone with the link" can view
-   - If it's private, the API key won't be able to access it
-
-3. **Verify Sheet Tab Name**
-   - The plugin looks for a tab named "File Data" by default
-   - Check your Google Sheet has a tab with this exact name (case-sensitive)
-   - If your tab has a different name, update it in Settings
-
-### Documents Not Syncing
-
-**Problem: Documents aren't appearing after sync**
-
-**Solutions:**
-1. **Check Required Columns**
-   - Your sheet MUST have a "HubSpot File URL" column
-   - This column must have values (rows without URLs are skipped)
-   - Verify column headers match: "Title", "Description", "Category (Urethanes, Epoxies, Sealers etc)", etc.
-
-2. **Check Sync Results**
-   - Go to TCP Documents > Sync Now
-   - Click "Sync Now"
-   - Look at the results: Created, Updated, Skipped, Errors
-   - If "Skipped" is high, check that rows have HubSpot File URLs
-
-3. **View Admin Documents List**
-   - Go to TCP Documents > All Documents
-   - This shows what's actually in the database
-   - If documents are here but not on frontend, it's a display issue
-
-### PDFs Not Opening
-
-**Problem: "PDF won't open" or "404 error"**
-
-**Solutions:**
-1. **Verify HubSpot URLs**
-   - Copy a HubSpot File URL from your Google Sheet
-   - Paste it directly in a browser
-   - It should open the PDF directly
-   - If it doesn't work in browser, the URL is incorrect
-
-2. **Check URL Format**
-   - HubSpot URLs should look like: `https://XXXXXX.fs1.hubspotusercontent-na1.net/hubfs/XXXXXX/filename.pdf`
-   - Make sure there are no extra spaces or line breaks
-
-3. **Browser Console Errors**
-   - Open browser console (F12)
-   - Click a PDF link
-   - Check for CORS errors or 404s
-   - This will help identify the issue
-
-### Settings Page Issues
-
-**Problem: "Settings won't save"**
-
-**Solutions:**
-1. Make sure you're logged in as an admin
-2. Check for WordPress errors in debug log
-3. Try deactivating other plugins temporarily
-4. Clear browser cache and try again
-
-**Problem: "Test Connection" button does nothing**
-
-**Solutions:**
-1. Check browser console for JavaScript errors
-2. Make sure jQuery is loaded on the page
-3. Try a different browser
-4. Check WordPress admin is using HTTPS (mixed content can block AJAX)
+- A Shopify store with theme editing access
+- A Google Cloud account with Sheets API enabled (free tier is sufficient)
+- A publicly-shared Google Sheet with document metadata
 
 ## Changelog
 
+### Version 2.0.0
+- Converted from WordPress plugin to Shopify theme files
+- Removed backend dependency -- fetches directly from Google Sheets API
+- Auto-syncs on every page view with session caching
+- Shopify theme editor section settings
+- Vanilla JS (no React dependency)
+
 ### Version 1.0.0
-- Initial release
-- Google Sheets integration
-- HubSpot PDF hosting
-- Search and filtering
-- REST API
-- React frontend
-- Auto-sync on login
-- WordPress authentication
+- Initial WordPress plugin release
 
 ## Support
 

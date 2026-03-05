@@ -1,0 +1,33 @@
+{% comment %}
+  TCP Document Library Snippet
+  Include this snippet in any template:
+    {% render 'tcp-document-library', api_key: 'YOUR_KEY', spreadsheet_id: 'YOUR_ID' %}
+
+  Parameters:
+    api_key        (required) - Google Sheets API key
+    spreadsheet_id (required) - Google Spreadsheet ID
+    per_page       (optional) - Documents per page (default: 30)
+    category       (optional) - Pre-filter by category
+    brand          (optional) - Pre-filter by brand
+    document_type  (optional) - Pre-filter by document type
+{% endcomment %}
+
+{{ 'tcp-documents.css' | asset_url | stylesheet_tag }}
+
+<div
+  id="tcp-document-library"
+  class="tcp-documents-wrapper"
+  data-api-key="{{ api_key }}"
+  data-spreadsheet-id="{{ spreadsheet_id }}"
+  data-per-page="{{ per_page | default: 30 }}"
+  {% if category != blank %}data-category="{{ category }}"{% endif %}
+  {% if brand != blank %}data-brand="{{ brand }}"{% endif %}
+  {% if document_type != blank %}data-document-type="{{ document_type }}"{% endif %}
+>
+  <div class="tcp-loading">
+    <div class="tcp-spinner"></div>
+    <p>Loading documents...</p>
+  </div>
+</div>
+
+<script src="{{ 'tcp-documents.js' | asset_url }}" defer></script>

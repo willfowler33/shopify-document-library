@@ -1,0 +1,92 @@
+{% comment %}
+  TCP Document Library Section
+  Displays a searchable, filterable document library powered by Google Sheets.
+  Configure API Key and Spreadsheet ID in the theme editor section settings.
+{% endcomment %}
+
+{{ 'tcp-documents.css' | asset_url | stylesheet_tag }}
+
+<div
+  id="tcp-document-library"
+  class="tcp-documents-wrapper"
+  data-api-key="{{ section.settings.google_api_key }}"
+  data-spreadsheet-id="{{ section.settings.spreadsheet_id }}"
+  data-per-page="{{ section.settings.per_page }}"
+  {% if section.settings.default_category != blank %}data-category="{{ section.settings.default_category }}"{% endif %}
+  {% if section.settings.default_brand != blank %}data-brand="{{ section.settings.default_brand }}"{% endif %}
+  {% if section.settings.default_document_type != blank %}data-document-type="{{ section.settings.default_document_type }}"{% endif %}
+>
+  <div class="tcp-loading">
+    <div class="tcp-spinner"></div>
+    <p>Loading documents...</p>
+  </div>
+</div>
+
+<script src="{{ 'tcp-documents.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Document Library",
+  "tag": "section",
+  "class": "tcp-document-library-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Google Sheets Connection"
+    },
+    {
+      "type": "text",
+      "id": "google_api_key",
+      "label": "Google Sheets API Key",
+      "info": "Your Google Sheets API key from Google Cloud Console. The sheet must be shared publicly (view-only)."
+    },
+    {
+      "type": "text",
+      "id": "spreadsheet_id",
+      "label": "Spreadsheet ID",
+      "default": "1kGVVChB5uqT1RR4cCbYxb97Bu2PyI6tgU8F6BfzCFo0",
+      "info": "Found in the spreadsheet URL: docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit"
+    },
+    {
+      "type": "header",
+      "content": "Display Settings"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Documents per page",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Default Filters (optional)"
+    },
+    {
+      "type": "text",
+      "id": "default_category",
+      "label": "Default category filter",
+      "info": "Pre-filter by category (e.g. Epoxies, Polyaspartics)"
+    },
+    {
+      "type": "text",
+      "id": "default_brand",
+      "label": "Default brand filter",
+      "info": "Pre-filter by brand"
+    },
+    {
+      "type": "text",
+      "id": "default_document_type",
+      "label": "Default document type filter",
+      "info": "Pre-filter by type (e.g. TDS, SDS)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Document Library"
+    }
+  ]
+}
+{% endschema %}

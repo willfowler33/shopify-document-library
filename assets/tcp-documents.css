@@ -1,5 +1,5 @@
 /**
- * TCP Document Library - Public Styles
+ * TCP Document Library - Shopify Styles
  */
 
 /* Container */
@@ -31,38 +31,6 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Login Required */
-.tcp-login-required {
-    text-align: center;
-    padding: 60px 20px;
-}
-
-.tcp-login-box {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 40px;
-    max-width: 400px;
-    margin: 0 auto;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.tcp-login-button {
-    display: inline-block;
-    background: #2271b1;
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-.tcp-login-button:hover {
-    background: #135e96;
-    color: #fff;
-}
-
 /* Search and Filters */
 .tcp-search-filters {
     background: #fff;
@@ -83,6 +51,7 @@
     border: 2px solid #ddd;
     border-radius: 4px;
     transition: border-color 0.2s;
+    box-sizing: border-box;
 }
 
 .tcp-search-input:focus {
@@ -223,6 +192,7 @@
     transition: background 0.2s;
     border: none;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
 .tcp-view-button:hover {
